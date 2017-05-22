@@ -1,0 +1,27 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Here there is an example code for the function groupByDate:
+
+```{r}
+library(firstPkg)
+set.seed(1)
+
+date_vec = sample(as.Date('2017-01-01') + 0:6, size = 36, replace = TRUE)
+value_vec = as.integer(rnorm(36, mean = 20, sd = 5))
+
+example_df = data.frame(date = date_vec, value = value_vec)
+
+head(example_df)
+
+firstPkg::groupByDate(example_df)
+```
+
