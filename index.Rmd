@@ -4,7 +4,6 @@ author: "Fernando Abarca"
 date: '2017-05-22'
 output:
   html_document: default
-  html_notebook: default
   pdf_document: default
 ---
 
