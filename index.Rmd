@@ -1,7 +1,7 @@
 ---
 title: 'Getting Started With R Package Development'
 author: "Fernando Abarca"
-date: '2017-05-22'
+date: '2018-03-28'
 output:
   html_document: default
   pdf_document: default
@@ -14,6 +14,17 @@ Tutorial Source Code: [github.com/fabarca/r-package-tutorial](https://github.com
 Main Reference: [R Packages - by Hadley Wickham](http://r-pkgs.had.co.nz/)
 
 ```{r functions, include=FALSE}
+rmd_path = getwd()
+# tutorial_tmp_path = tempdir()
+tutorial_tmp_path = paste0(tempdir(), "/firstPkg")
+
+# Clean example directory
+unlink(tutorial_tmp_path, recursive = TRUE)
+dir.create(tutorial_tmp_path)
+
+knitr::opts_knit$set(root.dir = tutorial_tmp_path) 
+
+
 print.files <- function(path = "."){
   cat(
       sort(
@@ -51,13 +62,13 @@ print.files <- function(path = "."){
 This is a cheat sheet for creating packages in R. These commands will be explained along this tutorial.
 
 ```{r basic_commands, eval=FALSE}
-# The first argument of the following functions must be the path to the package
-# but if you are already in the right folder, it isn't necessary to specify it.
-# To be sure, you may set the working directory by using this command:
+# The first argument of usethis::create_package() must be the path to the new package
+# but if you are already in the right folder, you could use "."
+# You can set the working directory by using this command:
 setwd("path/packageName")
 
 # Create package structure
-devtools::create(".")
+usethis::create_package(".")
 # Add some functions inside R/ folder, 
 # then create documentation and NAMESPACE file
 devtools::document()
@@ -65,13 +76,13 @@ devtools::document()
 devtools::install()
 
 # Create test folder
-devtools::use_testthat()
+usethis::use_testthat()
 # Add some tests inside tests/testthat/,
 # then perform your tests
 devtools::test()
 
 # Add a vignette template and dependencies
-devtools::use_vignette("vignette-name")
+usethis::use_vignette("vignette-name")
 # Install including vignettes
 devtools::install(build_vignettes = TRUE)
 ```
@@ -104,24 +115,21 @@ To have the last version of devtools you may use:
 devtools::install_github("hadley/devtools")
 ```
 
-```{r clean_dir, include=FALSE}
-# Clean example directory
-unlink("MyRPackages/firstPkg", recursive = TRUE)
-if(!dir.exists("./MyRPackages")){
-  dir.create("./MyRPackages")
-}
-```
-
 -------------------------------------------------------------------------------
 
 ## Package Creation {#creation}
 [Return to index &uarr;](#index)
 
-First, create a new package named `firstPkg` inside `MyRPackages/` folder by using:
-```{r create_package, message=FALSE, warning=FALSE}
-devtools::create("MyRPackages/firstPkg")
+First, create a new package folder named `firstPkg` by using:
+```{r create_package_sham, eval=FALSE}
+usethis::create_package("firstPkg")
 ```
 
+```{r create_package, echo=FALSE, message=FALSE, warning=FALSE}
+usethis::create_package(".")
+```
+
+If you are using Rstudio, the new package project should be opened automatically.
 Among the files created, will be the `DESCRIPTION` file, that you can edit with your own information.
 
 -------------------------------------------------------------------------------
@@ -132,7 +140,7 @@ Among the files created, will be the `DESCRIPTION` file, that you can edit with 
 This is the basic R package structure:
 
 ```{r list_dir, echo=FALSE}
-print.files("MyRPackages/firstPkg")
+print.files(".")
 ```
 
 The folder `R/` is empty at this moment, all your functions should be placed there.  
@@ -142,7 +150,7 @@ For example, you can create a script file called `groupByDate.R` with following 
 ```
 
 ```{r copy_script_r, include=FALSE}
-file.copy("examples/groupByDate.R", "MyRPackages/firstPkg/R/groupByDate.R")
+file.copy(paste0(rmd_path,"/examples/groupByDate.R"), "R/groupByDate.R")
 ```
 
 
@@ -158,29 +166,29 @@ In this example, you will need to use some functions from a external package. To
 
 To create documentation based on roxygen2 comments, run the following command:
 ```{r hidden_create_documentation, include=FALSE}
-devtools::document("MyRPackages/firstPkg")
+devtools::document()
 ```
 
 ```{r create_documentation, eval=FALSE}
-devtools::document("MyRPackages/firstPkg")
+devtools::document()
 
 ## Updating firstPkg documentation
 ## Loading firstPkg
-## Updating roxygen version in MyRPackages/firstPkg/DESCRIPTION
 ## Writing NAMESPACE
 ## Writing groupByDate.Rd
+## Documentation completed
 ```
 
 Now your package folder should look like this:
 ```{r list_files_doc, echo=FALSE}
-print.files("MyRPackages/firstPkg")
+print.files(".")
 ```
 
 
 Remember to add the external libraries that you need to import in the `DESCRIPTION` file. 
 In this case you should add this line: `Imports: dplyr`
 ```{r, include=FALSE}
-file.copy("examples/DESCRIPTION", "MyRPackages/firstPkg/DESCRIPTION", overwrite = TRUE)
+file.copy(paste0(rmd_path,"/examples/DESCRIPTION"), "DESCRIPTION", overwrite = TRUE)
 ```
 
 
@@ -191,10 +199,10 @@ file.copy("examples/DESCRIPTION", "MyRPackages/firstPkg/DESCRIPTION", overwrite 
 
 To install this package run:
 ```{r hidden_install, include=FALSE}
-devtools::install("MyRPackages/firstPkg")
+devtools::install()
 ```
 ```{r install, eval=FALSE}
-devtools::install("MyRPackages/firstPkg")
+devtools::install()
 ```
 
 Now you can check the documentation page of your function using:
@@ -229,13 +237,13 @@ firstPkg::groupByDate(example_df)
 To create a test folder using testthat package run:
 
 ```{r create_testthat, message=FALSE, warning=FALSE}
-devtools::use_testthat("MyRPackages/firstPkg")
+usethis::use_testthat()
 ```
 
 Here you can see the new folders:
 
 ```{r r_list_test_dir, echo=FALSE}
-print.files("MyRPackages/firstPkg/")
+print.files(".")
 ```
 
 Tests must go inside `tests/testthat/` folder with the prefix `test`. For example, you can create a new test script called `test_groupByDate.R`, with the following code inside:
@@ -244,17 +252,17 @@ Tests must go inside `tests/testthat/` folder with the prefix `test`. For exampl
 ```
 
 ```{r, include=FALSE}
-file.copy("examples/test_groupByDate.R", "MyRPackages/firstPkg/tests/testthat/test_groupByDate.R")
+file.copy(paste0(rmd_path,"/examples/test_groupByDate.R"), "tests/testthat/test_groupByDate.R")
 ```
 
 To perform the tests run:
 ```{r run_tests, message=FALSE, warning=FALSE}
-devtools::test("MyRPackages/firstPkg")
+devtools::test()
 ```
 
 This is the current directory structure, where almost everything was created automatically. You only had to manually add the `R/groupByDate.R` and `tests/testthat/test_groupByDate.R` files, and edit the `DESCRIPTION` file.
 ```{r list_files_final, echo=FALSE}
-print.files("MyRPackages/firstPkg")
+print.files(".")
 ```
 
 ----
@@ -265,34 +273,34 @@ print.files("MyRPackages/firstPkg")
 You may also wish to include a vignette in your package. For example to create a new vignette called `firstPkg_intro` run:
 
 ```{r code_create_vignette, eval=FALSE}
-devtools::use_vignette("firstPkg_intro", "MyRPackages/firstPkg")
+usethis::use_vignette("firstPkg_intro")
 ```
 
 ```{r run_create_vignette, include=FALSE}
-devtools::use_vignette("firstPkg_intro", "MyRPackages/firstPkg")
+usethis::use_vignette("firstPkg_intro")
 ```
 
 This command creates a template file called `firstPkg_intro.Rmd` inside `vignettes/` folder. It also automatically adds the dependencies in the `DESCRIPTION` file.
 
 ```{r r_list_vignettes_dir, echo=FALSE}
-print.files("MyRPackages/firstPkg")
+print.files(".")
 ```
 
 Now you can edit this template with your own code, for example:
 ```{r, echo=FALSE, comment=''}
-cat(readLines('examples/firstPkg_intro.Rmd'), sep = "\n")
+cat(readLines(paste0(rmd_path, '/examples/firstPkg_intro.Rmd')), sep = "\n")
 ```
 
 ```{r copy_vignette, include=FALSE}
-file.copy("examples/firstPkg_intro.Rmd", "MyRPackages/firstPkg/vignettes/firstPkg_intro.Rmd", overwrite = TRUE)
+file.copy(paste0(rmd_path,"/examples/firstPkg_intro.Rmd"), "vignettes/firstPkg_intro.Rmd", overwrite = TRUE)
 ```
 
 To install the package including vignettes run:
 ```{r hidden_install_vignettes, include=FALSE}
-devtools::install("MyRPackages/firstPkg", build_vignettes = TRUE)
+devtools::install(build_vignettes = TRUE)
 ```
 ```{r install_vignettes, eval=FALSE}
-devtools::install("MyRPackages/firstPkg", build_vignettes = TRUE)
+devtools::install(build_vignettes = TRUE)
 ```
 
 To open the vignette use:
@@ -301,7 +309,7 @@ vignette('firstPkg_intro')
 ```
 
 ```{r adding_readme, include=FALSE}
-cat("This package was automatically created while the tutorial compiling.\n", file = './MyRPackages/firstPkg/README.md')
+cat("This package was automatically created while the tutorial compiling.\n", file = paste0(rmd_path,'README.md'))
 ```
 
 ----
@@ -315,4 +323,12 @@ cat("This package was automatically created while the tutorial compiling.\n", fi
 
 
 
+```{r copy_pkg_to_tutorial, include=FALSE}
+new_package_backup = paste0(rmd_path, "/firstPkg")
+if(dir.exists(new_package_backup)){
+  unlink(new_package_backup, recursive = TRUE)
+}
+dir.create(new_package_backup)
+file.copy(tutorial_tmp_path, rmd_path, recursive = TRUE)
+```
 
