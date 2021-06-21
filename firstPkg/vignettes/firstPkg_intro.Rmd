@@ -1,17 +1,24 @@
 ---
-title: "Vignette Title"
+title: "firstPkg_intro"
 author: "Vignette Author"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{firstPkg_intro}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
 Here there is an example code for the function groupByDate:
 
-```{r}
+```{r example}
 library(firstPkg)
 set.seed(1)
 
@@ -24,4 +31,3 @@ head(example_df)
 
 firstPkg::groupByDate(example_df)
 ```
-

@@ -1,7 +1,7 @@
 ---
 title: 'Getting Started With R Package Development'
 author: "Fernando Abarca"
-date: '2018-03-28'
+date: '2021-06-21'
 output:
   html_document: default
   pdf_document: default
@@ -126,7 +126,8 @@ usethis::create_package("firstPkg")
 ```
 
 ```{r create_package, echo=FALSE, message=FALSE, warning=FALSE}
-usethis::create_package(".")
+# usethis::create_package("./.")
+usethis::create_package(tutorial_tmp_path)
 ```
 
 If you are using Rstudio, the new package project should be opened automatically.
@@ -140,7 +141,8 @@ Among the files created, will be the `DESCRIPTION` file, that you can edit with 
 This is the basic R package structure:
 
 ```{r list_dir, echo=FALSE}
-print.files(".")
+# print.files(".")
+print.files(tutorial_tmp_path)
 ```
 
 The folder `R/` is empty at this moment, all your functions should be placed there.  

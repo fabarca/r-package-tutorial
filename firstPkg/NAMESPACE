@@ -3,4 +3,5 @@
 export(groupByDate)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,group_by)
+importFrom(dplyr,n)
 importFrom(dplyr,summarise)

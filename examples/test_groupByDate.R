@@ -1,5 +1,4 @@
 library(firstPkg)
-context("Group By Date")
 
 date_vec = rep(as.Date('2017-01-01') + 0:8, 4)
 value_vec = sample(1:36*4, 36)
