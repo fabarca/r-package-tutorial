@@ -1,7 +1,7 @@
 ---
 title: 'Getting Started With R Package Development'
 author: "Fernando Abarca"
-date: '2021-06-21'
+date: '2021-06-25'
 output:
   html_document: default
   pdf_document: default
@@ -11,7 +11,9 @@ output:
 
 Tutorial Source Code: [github.com/fabarca/r-package-tutorial](https://github.com/fabarca/r-package-tutorial)
 
-Main Reference: [R Packages - by Hadley Wickham](http://r-pkgs.had.co.nz/)
+Main Reference (Online Book): [R Packages - by Hadley Wickham](http://r-pkgs.had.co.nz/)
+
+Cheat Sheet (PDF): [Package Development](https://github.com/rstudio/cheatsheets/raw/master/package-development.pdf)
 
 ```{r functions, include=FALSE}
 rmd_path = getwd()
@@ -59,16 +61,14 @@ print.files <- function(path = "."){
 ## Basic Commands {#commands}
 [Return to index &uarr;](#index)
 
+
 This is a cheat sheet for creating packages in R. These commands will be explained along this tutorial.
 
 ```{r basic_commands, eval=FALSE}
 # The first argument of usethis::create_package() must be the path to the new package
-# but if you are already in the right folder, you could use "."
-# You can set the working directory by using this command:
-setwd("path/packageName")
 
 # Create package structure
-usethis::create_package(".")
+usethis::create_package("PackageName")
 # Add some functions inside R/ folder, 
 # then create documentation and NAMESPACE file
 devtools::document()
@@ -86,6 +86,8 @@ usethis::use_vignette("vignette-name")
 # Install including vignettes
 devtools::install(build_vignettes = TRUE)
 ```
+
+
 
 ----
 
@@ -107,7 +109,7 @@ Both, the Rmarkdown file 'index.Rmd' and the R package 'firstPkg', are available
 
 These are the packages that you need to install to get started:
 ```{r required_packages, eval=FALSE}
-install.packages(c("devtools", "roxygen2", "testthat", "knitr"))
+install.packages(c("devtools", "roxygen2", "testthat", "knitr", "rmarkdown"))
 ```
 
 To have the last version of devtools you may use:
@@ -272,7 +274,14 @@ print.files(".")
 ## Vignettes {#vignettes}
 [Return to index &uarr;](#index)
 
-You may also wish to include a vignette in your package. For example to create a new vignette called `firstPkg_intro` run:
+You may also wish to include a vignette in your package.
+But first, you should have installed "pandoc" software:
+[How to Install Pandoc](https://pandoc.org/installing.html)
+
+If you are using Ubuntu you can try:
+`sudo apt-get install pandoc`
+
+Once the requirements are met. You can create a new vignette called `firstPkg_intro` running:
 
 ```{r code_create_vignette, eval=FALSE}
 usethis::use_vignette("firstPkg_intro")
@@ -319,9 +328,9 @@ cat("This package was automatically created while the tutorial compiling.\n", fi
 
 #### Additional references:  
 
-[rmarkdown-cheatsheet (PDF)](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) 
+Rmarkdown Cheat Sheet: [rmarkdown-2.0.pdf](https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf) 
 
-[rmarkdown-reference (PDF)](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+Rmarkdown Reference: [rmarkdown-reference.pdf](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
 
 
 
